@@ -5,6 +5,7 @@ public class FactoryRobotHazardAnalyzer {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
+        RobotHazardAuditor auditor = new RobotHazardAuditor();
 
         System.out.println("Factory Robot Hazard Analyzer");
 
@@ -20,7 +21,7 @@ public class FactoryRobotHazardAnalyzer {
         String machineryState = scanner.nextLine();
 
         try {
-            double risk = calculateHazardRisk(
+            double risk = auditor.calculateHazardRisk(
                     armPrecision,
                     workerDensity,
                     machineryState
@@ -29,46 +30,6 @@ public class FactoryRobotHazardAnalyzer {
 
         } catch (RobotSafetyException e) {
             System.out.println(e.getMessage());
-        }
-    }
-
-    public static double calculateHazardRisk(double armPrecision,
-                                             int workerDensity,
-                                             String machineryState)
-            throws RobotSafetyException {
-
-        if (armPrecision < 0.0 || armPrecision > 1.0) {
-            throw new RobotSafetyException(
-                    "Error: Arm precision must be 0.0-1.0"
-            );
-        }
-
-        if (workerDensity < 1 || workerDensity > 20) {
-            throw new RobotSafetyException(
-                    "Error: Worker density must be 1-20"
-            );
-        }
-
-        double machineRiskFactor = getMachineRiskFactor(machineryState);
-
-        return ((1.0 - armPrecision) * 15.0)
-                + (workerDensity * machineRiskFactor);
-    }
-
-    public static double getMachineRiskFactor(String machineryState)
-            throws RobotSafetyException {
-
-        switch (machineryState) {
-            case "Worn":
-                return 1.3;
-            case "Faulty":
-                return 2.0;
-            case "Critical":
-                return 3.0;
-            default:
-                throw new RobotSafetyException(
-                        "Error: Unsupported machinery state"
-                );
         }
     }
 }
